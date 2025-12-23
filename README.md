@@ -72,7 +72,7 @@ loss = torch.mean(torch.clamp(1 - logits*(2*target_onehot - 1), min=0)**2)
 ## 📦 Repository Structure
 
 ```bash
-BranchyNet-Replication/
+DSN-Replication/
 ├── src/
 │   ├── layers/
 │   │   ├── conv_block.py            # Reusable Conv + activation block for feature extraction
@@ -80,28 +80,27 @@ BranchyNet-Replication/
 │   │   ├── normalization.py         # Normalization layers (BatchNorm, LayerNorm)
 │   │   └── pooling.py               # Pooling operations (MaxPool, AvgPool)
 │   │
-│   ├── exits/
-│   │   ├── entropy.py               # Entropy computation for early-exit confidence
-│   │   └── exit_decision.py         # Threshold-based early-exit decision logic
+│   ├── companions/
+│   │   ├── companion_head.py        # Companion classifier (SVM/Softmax) for hidden layers
+│   │   └── companion_loss.py        # Squared hinge loss for companion objectives
 │   │
-│   ├── blocks/
-│   │   ├── backbone_block.py        # Backbone network blocks (VGG/ResNet-style)
-│   │   ├── branch_block.py          # Side branch attached to the backbone
-│   │   └── classifier_head.py       # Lightweight classifier for each exit
+│   ├── backbone/
+│   │   ├── backbone_block.py        # Main CNN blocks (Conv + Pooling layers)
+│   │   └── feature_map.py           # Utilities to manage intermediate feature maps
 │   │
 │   ├── model/
-│   │   └── branchynet.py            # Full model: backbone with multiple early exits with Forward pass with early-exit control flow
+│   │   └── dsn_net.py               # Full model: backbone + companion heads + output head
 │   │
 │   ├── loss/
-│   │   └── joint_loss.py            # Weighted sum of losses from all exits (theoretical)
+│   │   └── total_loss.py            # Combine output loss + companion losses (weighted, thresholded)
 │   │
-│   └── config.py                    # Number of exits, entropy thresholds, loss weights
+│   └── config.py                    # Hyperparameters: α_m, γ, number of layers, output/head types
 │
 ├── images/
-│   └── figmix.jpg                 
+│   └── figmix.jpg         
 │
 ├── requirements.txt                
-└── README.md                     
+└── README.md        
 
 ```
 ---
